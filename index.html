@@ -215,7 +215,6 @@
         <div id="question-visual">👀</div>
         
         <p id="question-text"></p>
-        <!-- 新增：廣東話口語解釋顯示區 -->
         <p id="question-explanation"></p>
         
         <div class="btn-grid">
@@ -246,31 +245,31 @@
 
 <script>
     const questionsData = [
-        { text: "抬高頭會不會令你的頭暈加劇？", explanation: "（即係當你向上望或者抬高個頭嗰陣，會唔會覺得暈多咗？）", visual: "⬆️🤕" },
-        { text: "因為頭暈的問題，你有沒有覺得很沮喪？", explanation: "（即係因為成日暈，搞到你心情好灰、好唔開心？）", visual: "😞😔" },
-        { text: "因為頭暈，你有沒有減少為了工作或者消遣而外出？", explanation: "（即係有冇因為怕暈，而少咗出街玩或者出外做嘢？）", visual: "🚶‍♂️🚫" },
-        { text: "在超級市場的通道行路，會不會令你頭暈加劇？", explanation: "（即係喺行超市嗰啲長走廊、或者兩邊有好多貨架嘅地方，會唔會覺得暈？）", visual: "🛒🛒" },
-        { text: "因為頭暈，你上床或者落床有沒有困難？", explanation: "（即係平時上床瞓覺或者起身落床嗰陣，會唔會因為暈而覺得辛苦？）", visual: "🛌😵" },
-        { text: "頭暈有沒有嚴重限制你參與社交活動？", explanation: "（即係有冇因為頭暈，搞到你唔敢去出街食飯、睇戲或者去派對？）", visual: "👥❌" },
-        { text: "因為頭暈，你閱讀有沒有困難？", explanation: "（即係睇書、睇報紙或者睇手機字嗰陣，會唔會因為頭暈而覺得有困難？）", visual: "📖👀" },
-        { text: "做一些比較吃力的活動，例如做運動、跳舞或做粗重家務，會不會令頭暈加劇？", explanation: "（即係當你用力做嘢，例如掃地、拖地或者做運動，會唔會覺得暈多咗？）", visual: "🧹🏋️" },
-        { text: "因為頭暈，你出街會不會一定要有人陪，不敢自己一個外出？", explanation: "（即係會唔會因為驚自己一個喺街度暈，所以一定要人陪先敢出街？）", visual: "👫😰" },
-        { text: "因為頭暈，你有沒有試過在別人面前覺得尷尬？", explanation: "（即係有冇試過因為頭暈企唔穩或者要人扶，搞到你覺得好尷尬、唔好意思？）", visual: "😳🫣" },
-        { text: "頭部快速移動會不會令你頭暈加劇？", explanation: "（即係如果你個頭突然擰轉或者郁得好快，會唔會即刻覺得好暈？）", visual: "🔄🤕" },
-        { text: "因為頭暈，你會不會避開去高的地方？", explanation: "（即係因為怕暈，而唔敢行樓梯、搭扶手電梯或者去高處？）", visual: "🏢🚫" },
-        { text: "在床上轉身會不會令頭暈加劇？", explanation: "（即係瞓喺度轉身、反身嗰陣，會唔會覺得暈？）", visual: "🛏️🔄" },
-        { text: "因為頭暈，你做粗重家務有沒有困難？", explanation: "（即係做啲要用力嘅家務，例如洗廁所、大掃除，會唔會覺得好辛苦？）", visual: "🧽💦" },
-        { text: "因為頭暈，你會不會怕其他人以為你喝醉酒？", explanation: "（即係因為頭暈行路跌跌撞撞，驚畀人誤會你飲醉酒？）", visual: "🍺🚶" },
-        { text: "因為頭暈，你自己一個人散步有沒有困難？", explanation: "（即係自己一個落街行吓散步，會唔會因為暈而覺得有困難？）", visual: "🚶‍♂️🌳" },
-        { text: "在行人路上行，會不會令頭暈加劇？", explanation: "（即係平時喺街度行路，望住啲人來人往，會唔會覺得暈？）", visual: "🛣️😵‍💫" },
-        { text: "因為頭暈，你集中精神有沒有困難？", explanation: "（即係頭暈有冇搞到你好難集中精神諗嘢或者做嘢？）", visual: "🧠📉" },
-        { text: "因為頭暈，你在家裡關了燈或黑暗的時候走路有沒有困難？", explanation: "（即係半夜黑鼆鼆起身去廁所，或者熄咗燈行路，會唔會特別覺得困難？）", visual: "🌃🚶" },
-        { text: "因為頭暈，你會不會怕自己一個人留在家中？", explanation: "（即係會唔會驚自己一個喺屋企嗰陣突然頭暈冇人幫，而覺得害怕？）", visual: "🏠😨" },
-        { text: "因為頭暈，你有沒有覺得自己好像有殘障一樣？", explanation: "（即係頭暈搞到你好似失去咗活動能力，覺得自己好似傷殘人士咁？）", visual: "🦽😔" },
-        { text: "頭暈的問題有沒有對你和家人或朋友的關係造成壓力？", explanation: "（即係頭暈有冇影響你同屋企人或朋友嘅相處，令大家有壓力？）", visual: "👨‍👩‍👧‍👦🌩️" },
-        { text: "因為頭暈，你有沒有覺得抑鬱？", explanation: "（即係因為成日暈，搞到你覺得好灰心、情緒好低落、甚至有抑鬱嘅感覺？）", visual: "🌧️😢" },
-        { text: "頭暈有沒有影響你的工作或者家務責任？", explanation: "（即係有冇因為暈，搞到你返唔到工、或者做唔到平時要負責嘅家務？）", visual: "💼📉" },
-        { text: "彎低腰會不會令頭暈加劇？", explanation: "（即係踎低、彎腰執嘢或者綁鞋帶嗰陣，會唔會覺得好暈？）", visual: "👟⬇️" }
+        { text: "把眼睛往上望會不會使問題惡化？", explanation: "（即係當你向上望嗰陣，會唔會覺得暈多咗？）", visual: "⬆️🤕" },
+        { text: "這問題會不會使你感到灰心失意？", explanation: "（即係因為成日暈，搞到你心情好灰、好唔開心？）", visual: "😞😔" },
+        { text: "你會不會因為這問題而限制自己的商務遠行或康樂活動?", explanation: "（即係有冇因為暈，而少咗出街玩或者出外做嘢？）", visual: "🚶‍♂️🚫" },
+        { text: "在超級市場的通道上走動會不會使問題惡化？", explanation: "（即係喺行超市嗰啲長走廊、或者兩邊有好多貨架嘅地方，會唔會覺得暈多咗？）", visual: "🛒🛒" },
+        { text: "這問題會不會使你難於上床或下床?", explanation: "（即係平時上床瞓覺或者起身落床嗰陣，會唔會因為暈而覺得辛苦？）", visual: "🛌😵" },
+        { text: "這問題會不會限制你參與各種社交活動，例如:外出用膳、外 出看電影、跳舞或參加舞會？", explanation: "（即係有冇因為頭暈，搞到你唔敢去出街食飯、睇戲或者去派對？）", visual: "👥❌" },
+        { text: "這問題會不會使你難於閱讀?", explanation: "（即係睇書、睇報紙或者睇手機字嗰陣，會唔會因為頭暈而覺得有困難？）", visual: "📖👀" },
+        { text: "進行運動跳舞或家務雜活(例如:打掃或收拾碗碟)等較有難度 的活動會不會使問題惡化?", explanation: "（即係當你用力做嘢，例如掃地、拖地或者做運動，會唔會覺得暈多咗？）", visual: "🧹🏋️" },
+        { text: "問題會不會使你害怕單獨離家外出?", explanation: "（即係會唔會因為驚自己一個喺街度暈，所以一定要人陪先敢出街？）", visual: "👫😰" },
+        { text: "這問題有沒有曾經使你在別人面前感到難堪？", explanation: "（即係有冇試過因為頭暈企唔穩或者要人扶，搞到你覺得好尷尬、唔好意思？）", visual: "😳🫣" },
+        { text: "快速移動頭部會不會使問題惡化？", explanation: "（即係如果你個頭突然擰轉或者郁得好快，會唔會覺得暈多咗？？）", visual: "🔄🤕" },
+        { text: "這問題會不會使你有畏高的情况？", explanation: "（即係因為怕暈，而唔敢去高處？）", visual: "🏢🚫" },
+        { text: "在床上翻轉身體會不會使問題惡化？", explanation: "（即係瞓喺度轉身、反身嗰陣，會唔會覺得暈多咗？？）", visual: "🛏️🔄" },
+        { text: "這問題會不會使你難於處理消耗體力的家務或園務?", explanation: "（即係做啲要用體力嘅家務，例如洗廁所、大掃除，會唔會覺得好辛苦？）", visual: "🧽💦" },
+        { text: "你會不會因這問題而害怕別人把自己看成無法自制的?", explanation: "（即係因為頭暈，驚畀人誤會你控制唔到自己？）", visual: "🍺🚶" },
+        { text: "這問題會不會使你難於獨自外出散步?", explanation: "（即係自己一個落街行吓散步，會唔會因為暈而覺得有困難？）", visual: "🚶‍♂️🌳" },
+        { text: "在行人道上走路會不會使問題惡化?", explanation: "（即係平時喺街度行路，會唔會覺得暈多咗？）", visual: "🛣️😵‍💫" },
+        { text: "這問題會不會使你難於集中精神?", explanation: "（即係頭暈有冇搞到你好難集中精神諗嘢或者做嘢？）", visual: "🧠📉" },
+        { text: "這問題會不會使你難於在漆黑的房子裡走動?", explanation: "（即係半夜黑鼆鼆起身去廁所，或者熄咗燈行路，會唔會特別覺得困難？）", visual: "🌃🚶" },
+        { text: "這問題會不會使你難於害怕獨自留在家中?", explanation: "（即係會唔會因為怕暈,而驚自己一個喺屋企？）", visual: "🏠😨" },
+        { text: "這問題會不會使你覺得自己的身體有缺憾?", explanation: "（即係頭暈搞到你好似失去咗活動能力，覺得自己身體好似有缺憾咁？）", visual: "🦽😔" },
+        { text: "這問題有沒有曾經影響你與家人或朋友的關係?", explanation: "（即係頭暈有冇影響你同屋企人或朋友嘅相處？）", visual: "👨‍👩‍👧‍👦🌩️" },
+        { text: "這問題會不會使你沮喪?", explanation: "（即係因為成日暈，搞到你覺得好灰心、情緒好低落嘅感覺？）", visual: "🌧️😢" },
+        { text: "這問題會不會妨礙你工作或做家務?", explanation: "（即係有冇因為暈，搞到你返唔到工、或者做唔到平時要負責嘅家務？）", visual: "💼📉" },
+        { text: "向前彎腰會不會使問題惡化?", explanation: "（即係要彎腰,例如踎低、執嘢或者綁鞋帶嗰陣，會唔會覺得暈多咗？）", visual: "👟⬇️" }
     ];
 
     const totalQuestions = questionsData.length; // 25
@@ -301,7 +300,6 @@
         const q = questionsData[currentStep];
         document.getElementById('question-number').innerText = `第 ${currentStep + 1} / ${totalQuestions} 題`;
         document.getElementById('question-text').innerText = q.text;
-        // 將廣東話解釋顯示喺畫面上
         document.getElementById('question-explanation').innerText = q.explanation;
         document.getElementById('question-visual').innerText = q.visual; 
         document.getElementById('progress-fill').style.width = `${((currentStep + 1) / totalQuestions) * 100}%`;
@@ -437,7 +435,6 @@
     function showResults() {
         stopSpeaking();
 
-        // DHI 的總分是直接將所有分數相加 (滿分 100)
         const finalScore = scores.reduce((a, b) => a + b, 0);
         
         document.getElementById('question-screen').classList.add('hidden');
