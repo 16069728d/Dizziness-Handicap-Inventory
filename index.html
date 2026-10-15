@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暈眩障礙紀錄 (廣東話語音配圖版)</title>
+    <style>
+        :root {
+            --green: #26ad60;
+            --yellow: #f1c40f;
+            --red: #e74c3c;
+            --blue: #3498db;
+            --grey: #7f8c8d;
+            --dark: #2c3e50;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #app-container {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 95%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        /* Base button styles */
+        .opt-btn {
+            padding: 18px 22px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 3px solid transparent;
+            border-radius: 15px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s, box-shadow 0.3s;
+        }
+
+        .opt-btn span.emoji {
+            font-size: 2.2rem;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .opt-btn:active { transform: scale(0.98); }
+
+        /* Dynamic Visual Cues */
+        .btn-dimmed {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .btn-highlight {
+            opacity: 1;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border: 3px solid #2c3e50;
+            z-index: 10;
+        }
+
+        .btn-start { background-color: var(--blue); width: 100%; font-size: 1.8rem; padding: 22px; border: none; border-radius: 15px; color: white; cursor: pointer; font-weight: bold;}
+        .btn-1 { background-color: var(--red); }
+        .btn-2 { background-color: var(--yellow); color: var(--dark); }
+        .btn-3 { background-color: var(--green); }
+        
+        .nav-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background-color: #eee;
+            color: #333;
+            font-size: 1.1rem;
+            padding: 15px;
+            flex: 1;
+            min-width: 120px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .back-btn { background-color: var(--grey); color: white; }
+        .explain-btn { background-color: #ffeaa7; color: #d35400; }
+
+        #progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--blue);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .result-box {
+            border: 4px solid var(--blue);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: #f8fbff;
+        }
+
+        /* Question Visual Area */
+        #question-visual {
+            font-size: 4rem;
+            background: #f8fbff;
+            border: 3px dashed #bdc3c7;
+            border-radius: 20px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            display: inline-block;
+            min-width: 150px;
+            letter-spacing: 5px;
+        }
+
+        /* Instructions Box Style */
+        .instructions-box {
+            text-align: left;
+            background-color: #e8f4f8;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            color: var(--dark);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .instructions-box ul {
+            padding-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+        .instructions-box li {
+            margin-bottom: 10px;
+        }
+
+        .hidden { display: none !important; }
+        p#question-text { font-size: 1.4rem; line-height: 1.4; margin: 15px 0 5px 0; font-weight: bold; color: var(--dark); }
+        p#question-explanation { font-size: 1.15rem; line-height: 1.4; margin: 0 0 20px 0; color: var(--grey); font-weight: normal; }
+        .instruction { font-size: 1.3rem; color: #d35400; font-weight: bold; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div id="progress-bar" class="hidden"><div id="progress-fill"></div></div>
+    
+    <div id="start-screen">
+        <h1 style="color: var(--dark); margin-bottom: 15px;">暈眩障礙紀錄</h1>
+        <h2 style="color: var(--grey); font-size: 1.3rem; margin-top: -10px; margin-bottom: 15px; font-weight: bold;">
+            新界東醫院聯網 物理治療部
+        </h2>
+
+        <div class="instructions-box">
+            <strong style="color: var(--blue);">病人須知：</strong><br>
+            此量度評估是用作辨明你的暈眩(Dizziness)或身體不穩定(Unsteadiness)而或會體驗到的困難，請以「會」、「不會」或「有時會」來回答下列問題。
+            <br><br>
+            <strong>說明：</strong>
+            <ul>
+                <li>這份問卷共有 25 題，主要評估「頭暈」對你日常生活的影響。</li>
+                <li>請根據你<strong>最近的情況</strong>，選擇最適合的答案。</li>
+                <li>請仔細聆聽每條問題及口語解釋，並作答。</li>
+            </ul>
+        </div>
+
+        <div style="font-size: 5rem; margin-bottom: 20px;">😵‍💫📊</div>
+        <p style="font-size: 1.4rem; font-weight: bold; color: var(--dark); margin-bottom: 20px;">請撳下面藍色掣開始</p>
+        <button class="btn-start" onclick="startAssessment()">開始做問卷</button>
+    </div>
+
+    <div id="question-screen" class="hidden">
+        <h2 id="question-number" style="color: var(--blue); margin-bottom: 5px;">第 1 題</h2>
+        
+        <div id="question-visual">👀</div>
+        
+        <p id="question-text"></p>
+        <!-- 新增：廣東話口語解釋顯示區 -->
+        <p id="question-explanation"></p>
+        
+        <div class="btn-grid">
+            <button class="opt-btn btn-1" onclick="handleAnswer(1)" id="opt1"></button>
+            <button class="opt-btn btn-2" onclick="handleAnswer(2)" id="opt2"></button>
+            <button class="opt-btn btn-3" onclick="handleAnswer(3)" id="opt3"></button>
+        </div>
+
+        <div class="nav-container">
+            <button id="back-btn" class="nav-btn back-btn hidden" onclick="goBack()">⬅ 返回</button>
+            <button class="nav-btn explain-btn" onclick="speakExplanation()">💡 聽解釋</button>
+            <button class="nav-btn" onclick="speakCurrent(true)">🔊 重複</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <h1 style="color: var(--green);">搞掂晒！做完喇！</h1>
+        <div style="font-size: 4rem; margin: 10px 0;">🎉👏</div>
+        <div class="result-box">
+            <span style="font-size: 1.2rem;">你嘅暈眩障礙紀錄分數係：</span>
+            <div id="final-score" style="font-size: 5rem; font-weight: 900; color: var(--blue);">--</div>
+            <span style="font-size: 1rem; color: var(--grey);">（總分 100 分）</span>
+        </div>
+        <p class="instruction">記住寫低呢個分數，<br>陣間話畀物理治療師聽呀。</p>
+        <button class="btn-start" onclick="location.reload()" style="margin-top: 20px;">重新開始</button>
+    </div>
+</div>
+
+<script>
+    const questionsData = [
+        { text: "抬高頭會不會令你的頭暈加劇？", explanation: "（即係當你向上望或者抬高個頭嗰陣，會唔會覺得暈多咗？）", visual: "⬆️🤕" },
+        { text: "因為頭暈的問題，你有沒有覺得很沮喪？", explanation: "（即係因為成日暈，搞到你心情好灰、好唔開心？）", visual: "😞😔" },
+        { text: "因為頭暈，你有沒有減少為了工作或者消遣而外出？", explanation: "（即係有冇因為怕暈，而少咗出街玩或者出外做嘢？）", visual: "🚶‍♂️🚫" },
+        { text: "在超級市場的通道行路，會不會令你頭暈加劇？", explanation: "（即係喺行超市嗰啲長走廊、或者兩邊有好多貨架嘅地方，會唔會覺得暈？）", visual: "🛒🛒" },
+        { text: "因為頭暈，你上床或者落床有沒有困難？", explanation: "（即係平時上床瞓覺或者起身落床嗰陣，會唔會因為暈而覺得辛苦？）", visual: "🛌😵" },
+        { text: "頭暈有沒有嚴重限制你參與社交活動？", explanation: "（即係有冇因為頭暈，搞到你唔敢去出街食飯、睇戲或者去派對？）", visual: "👥❌" },
+        { text: "因為頭暈，你閱讀有沒有困難？", explanation: "（即係睇書、睇報紙或者睇手機字嗰陣，會唔會因為頭暈而覺得有困難？）", visual: "📖👀" },
+        { text: "做一些比較吃力的活動，例如做運動、跳舞或做粗重家務，會不會令頭暈加劇？", explanation: "（即係當你用力做嘢，例如掃地、拖地或者做運動，會唔會覺得暈多咗？）", visual: "🧹🏋️" },
+        { text: "因為頭暈，你出街會不會一定要有人陪，不敢自己一個外出？", explanation: "（即係會唔會因為驚自己一個喺街度暈，所以一定要人陪先敢出街？）", visual: "👫😰" },
+        { text: "因為頭暈，你有沒有試過在別人面前覺得尷尬？", explanation: "（即係有冇試過因為頭暈企唔穩或者要人扶，搞到你覺得好尷尬、唔好意思？）", visual: "😳🫣" },
+        { text: "頭部快速移動會不會令你頭暈加劇？", explanation: "（即係如果你個頭突然擰轉或者郁得好快，會唔會即刻覺得好暈？）", visual: "🔄🤕" },
+        { text: "因為頭暈，你會不會避開去高的地方？", explanation: "（即係因為怕暈，而唔敢行樓梯、搭扶手電梯或者去高處？）", visual: "🏢🚫" },
+        { text: "在床上轉身會不會令頭暈加劇？", explanation: "（即係瞓喺度轉身、反身嗰陣，會唔會覺得暈？）", visual: "🛏️🔄" },
+        { text: "因為頭暈，你做粗重家務有沒有困難？", explanation: "（即係做啲要用力嘅家務，例如洗廁所、大掃除，會唔會覺得好辛苦？）", visual: "🧽💦" },
+        { text: "因為頭暈，你會不會怕其他人以為你喝醉酒？", explanation: "（即係因為頭暈行路跌跌撞撞，驚畀人誤會你飲醉酒？）", visual: "🍺🚶" },
+        { text: "因為頭暈，你自己一個人散步有沒有困難？", explanation: "（即係自己一個落街行吓散步，會唔會因為暈而覺得有困難？）", visual: "🚶‍♂️🌳" },
+        { text: "在行人路上行，會不會令頭暈加劇？", explanation: "（即係平時喺街度行路，望住啲人來人往，會唔會覺得暈？）", visual: "🛣️😵‍💫" },
+        { text: "因為頭暈，你集中精神有沒有困難？", explanation: "（即係頭暈有冇搞到你好難集中精神諗嘢或者做嘢？）", visual: "🧠📉" },
+        { text: "因為頭暈，你在家裡關了燈或黑暗的時候走路有沒有困難？", explanation: "（即係半夜黑鼆鼆起身去廁所，或者熄咗燈行路，會唔會特別覺得困難？）", visual: "🌃🚶" },
+        { text: "因為頭暈，你會不會怕自己一個人留在家中？", explanation: "（即係會唔會驚自己一個喺屋企嗰陣突然頭暈冇人幫，而覺得害怕？）", visual: "🏠😨" },
+        { text: "因為頭暈，你有沒有覺得自己好像有殘障一樣？", explanation: "（即係頭暈搞到你好似失去咗活動能力，覺得自己好似傷殘人士咁？）", visual: "🦽😔" },
+        { text: "頭暈的問題有沒有對你和家人或朋友的關係造成壓力？", explanation: "（即係頭暈有冇影響你同屋企人或朋友嘅相處，令大家有壓力？）", visual: "👨‍👩‍👧‍👦🌩️" },
+        { text: "因為頭暈，你有沒有覺得抑鬱？", explanation: "（即係因為成日暈，搞到你覺得好灰心、情緒好低落、甚至有抑鬱嘅感覺？）", visual: "🌧️😢" },
+        { text: "頭暈有沒有影響你的工作或者家務責任？", explanation: "（即係有冇因為暈，搞到你返唔到工、或者做唔到平時要負責嘅家務？）", visual: "💼📉" },
+        { text: "彎低腰會不會令頭暈加劇？", explanation: "（即係踎低、彎腰執嘢或者綁鞋帶嗰陣，會唔會覺得好暈？）", visual: "👟⬇️" }
+    ];
+
+    const totalQuestions = questionsData.length; // 25
+    let currentStep = 0;
+    let scores = [];
+    let repeatTimeout; 
+    let sequenceId = 0; 
+
+    // DHI 的 3 個選項及分數 (會=4, 有時會=2, 不會=0)
+    const optionsData = [
+        { text: "會", icon: "✔️", score: 4 },
+        { text: "有時會", icon: "🤔", score: 2 },
+        { text: "不會", icon: "❌", score: 0 }
+    ];
+
+    function getAdjustedRate() {
+        return 0.75; 
+    }
+
+    function startAssessment() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('question-screen').classList.remove('hidden');
+        document.getElementById('progress-bar').classList.remove('hidden');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = questionsData[currentStep];
+        document.getElementById('question-number').innerText = `第 ${currentStep + 1} / ${totalQuestions} 題`;
+        document.getElementById('question-text').innerText = q.text;
+        // 將廣東話解釋顯示喺畫面上
+        document.getElementById('question-explanation').innerText = q.explanation;
+        document.getElementById('question-visual').innerText = q.visual; 
+        document.getElementById('progress-fill').style.width = `${((currentStep + 1) / totalQuestions) * 100}%`;
+        
+        const backBtn = document.getElementById('back-btn');
+        if (currentStep > 0) backBtn.classList.remove('hidden');
+        else backBtn.classList.add('hidden');
+
+        for(let i=1; i<=3; i++) {
+            document.getElementById(`opt${i}`).innerHTML = `<span class="emoji">${optionsData[i-1].icon}</span> <span>${i}. ${optionsData[i-1].text}</span>`;
+        }
+        
+        speakCurrent();
+    }
+
+    function stopSpeaking() {
+        sequenceId++; 
+        window.speechSynthesis.cancel();
+        clearTimeout(repeatTimeout);
+        resetButtonStyles();
+    }
+
+    function resetButtonStyles() {
+        for(let i=1; i<=3; i++) {
+            let btn = document.getElementById(`opt${i}`);
+            btn.classList.remove('btn-dimmed', 'btn-highlight');
+        }
+    }
+
+    function speakPromise(text, seq) {
+        return new Promise(resolve => {
+            if (seq !== sequenceId) return resolve(); 
+            
+            window.currentUtterance = new SpeechSynthesisUtterance(text);
+            window.currentUtterance.lang = 'zh-HK';
+            window.currentUtterance.rate = getAdjustedRate();
+            
+            const voices = window.speechSynthesis.getVoices();
+            const hkVoices = voices.filter(v => v.lang === 'zh-HK' || v.lang === 'zh_HK');
+            if (hkVoices.length > 0) {
+                window.currentUtterance.voice = hkVoices.find(v => v.name.includes('Premium') || v.name.includes('Google')) || hkVoices[0];
+            }
+            
+            window.currentUtterance.onend = resolve;
+            window.currentUtterance.onerror = resolve; 
+            
+            window.speechSynthesis.speak(window.currentUtterance);
+        });
+    }
+
+    async function speakCurrent(isReplay = false) {
+        stopSpeaking(); 
+        const currentSeq = sequenceId;
+        const q = questionsData[currentStep];
+        
+        let intro = isReplay ? "" : `第 ${currentStep + 1} 題。`;
+        
+        await speakPromise(`${intro}${q.text}。請選擇：`, currentSeq);
+        if (currentSeq !== sequenceId) return; 
+
+        for(let i=1; i<=3; i++) {
+            if (currentSeq !== sequenceId) return;
+
+            for(let j=1; j<=3; j++) {
+                let btn = document.getElementById(`opt${j}`);
+                if(j === i) {
+                    btn.classList.add('btn-highlight');
+                    btn.classList.remove('btn-dimmed');
+                } else {
+                    btn.classList.add('btn-dimmed');
+                    btn.classList.remove('btn-highlight');
+                }
+            }
+
+            await speakPromise(`第 ${i}，${optionsData[i-1].text}`, currentSeq);
+        }
+
+        if (currentSeq !== sequenceId) return;
+        
+        resetButtonStyles();
+
+        repeatTimeout = setTimeout(() => {
+            speakCurrent(true);
+        }, 40000); 
+    }
+
+    async function speakExplanation() {
+        stopSpeaking();
+        const currentSeq = sequenceId;
+        const q = questionsData[currentStep];
+        
+        await speakPromise(`${q.explanation.replace(/[（）]/g, '')}`, currentSeq);
+        
+        if (currentSeq === sequenceId) {
+            repeatTimeout = setTimeout(() => {
+                speakCurrent(true);
+            }, 40000);
+        }
+    }
+
+    function handleAnswer(optionIndex) {
+        stopSpeaking(); 
+        
+        const buttons = document.querySelectorAll('.opt-btn');
+        buttons.forEach(b => b.style.pointerEvents = 'none'); 
+
+        const selectedOption = optionsData[optionIndex - 1];
+        speakPromise(`你揀咗：${selectedOption.text}。`, sequenceId).then(() => {
+            scores.push(selectedOption.score);
+            currentStep++;
+            buttons.forEach(b => b.style.pointerEvents = 'auto');
+            
+            if (currentStep < totalQuestions) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+    }
+
+    function goBack() {
+        stopSpeaking();
+
+        if (currentStep > 0) {
+            scores.pop(); 
+            currentStep--; 
+            speakPromise("返回上一條題目。", sequenceId).then(() => {
+                loadQuestion();
+            });
+        }
+    }
+
+    function showResults() {
+        stopSpeaking();
+
+        // DHI 的總分是直接將所有分數相加 (滿分 100)
+        const finalScore = scores.reduce((a, b) => a + b, 0);
+        
+        document.getElementById('question-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = finalScore;
+        
+        speakPromise(`做完晒喇！你嘅分數係 ${finalScore} 分。記住要寫低呢個分數，陣間話畀你嘅物理治療師聽呀。`, sequenceId);
+    }
+
+    window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+    };
+</script>
+</body>
+</html>
